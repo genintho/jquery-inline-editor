@@ -52,10 +52,6 @@ $.fn.editInPlace.defaults = {
 	text_size:			null, // integer: set cols attribute of text input, if field_type is set to text. Use CSS if possible though
 	
 	value_required:		false, // boolean: if set to true, the element will not be saved unless a value is entered
-	element_id:			"element_id", // string: name of parameter holding the id or the editable
-	update_value:		"update_value", // string: name of parameter holding the updated/edited value
-	original_value:		'original_value', // string: name of parameter holding the updated/edited value
-	original_html:		"original_html", // string: name of parameter holding original_html value of the editable /* DEPRECATED in 2.2.0 */ use original_value instead.
 	save_if_nothing_changed:	false,  // boolean: submit to function or server even if the user did not change anything
 	on_blur:			"save", // string: "save" or null; what to do on blur; will be overridden if show_buttons is true
 	cancel:				"", // string: if not empty, a jquery selector for elements that will not cause the editor to open even though they are clicked. E.g. if you have extra buttons inside editable fields
@@ -201,7 +197,7 @@ $.extend(InlineEditor.prototype, {
             var html = this.dom.html().replace(/\n/ig,'')
             this.originalValue = html.replace(/<BR>/ig,'\n');
         } else {
-            this.originalValue = trim(this.dom.text());
+            this.originalValue = trim( this.dom.text() );
         }
 	},
 	
@@ -211,9 +207,9 @@ $.extend(InlineEditor.prototype, {
 	
 	setClosedEditorContent: function(aValue) {
         if (this.settings.use_html)
-            this.dom.html(aValue.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ '<BR>' +'$2'));
+            this.dom.html( aValue.replace( /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ '<BR>' +'$2' ) );
         else
-            this.dom.text(aValue);
+            this.dom.text( aValue );
 	},
 	
 	workAroundFirefoxBlurBug: function() {
@@ -490,7 +486,6 @@ $.extend(InlineEditor.prototype, {
 		this.dom.removeClass('editInPlace-active');
 	},
 	
-
 	missingCommaErrorPreventer:''
 });
 
@@ -502,14 +497,12 @@ function assertMandatorySettingsArePresent(options) {
 	// one of these needs to be non falsy
 	if( options.callback )
 		return;
-	
+
 	throw new Error("Need to set either url: or callback: option for the inline editor to work.");
 }
 
 function trim(aString) {
-	return aString
-		.replace(/^\s+/, '')
-		.replace(/\s+$/, '');
+	return $.trim( aString );
 }
 
 function hasContent(something) {
