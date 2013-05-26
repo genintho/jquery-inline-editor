@@ -49,6 +49,7 @@ $.fn.editInPlace.defaults = {
 	textarea_rows:		10, // integer: set rows attribute of textarea, if field_type is set to textarea. Use CSS if possible though
 	textarea_cols:		25, // integer: set cols attribute of textarea, if field_type is set to textarea. Use CSS if possible though
 	select_options:		"", // string or array or function that returns a string: Used if field_type is set to 'select'. Can be comma delimited list of options 'textandValue,text:value', Array of options ['textAndValue', 'text:value'] or array of arrays ['textAndValue', ['text', 'value']]. The last form is especially usefull if your labels or values contain colons)
+    shouldOpenOnInit:   false, // allow us to open the editor when we are initing it
 	text_size:			null, // integer: set cols attribute of text input, if field_type is set to text. Use CSS if possible though
 	
 	value_required:		false, // boolean: if set to true, the element will not be saved unless a value is entered
@@ -84,23 +85,28 @@ var delegateExample = {
 	// return value will be shown during saving
 	willCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
 	didCloseEditInPlace: function(aDOMNode, aSettingsDict) {},
+	//When writing in the text box
+    onKeyUp: function(aDOMNode, triggeringEvent) {},
 	
 	missingCommaErrorPreventer:''
 };
-
+*/
 
 function InlineEditor(settings, dom) {
 	this.settings = settings;
 	this.dom = dom;
 	this.originalValue = null;
 	this.didInsertDefaultText = false;
-};
+}
 
 $.extend(InlineEditor.prototype, {
 	
 	init: function() {
 		this.setDefaultTextIfNeccessary();
 		this.connectOpeningEvents();
+        if( this.settings.shouldOpenOnInit ){
+            this.openEditor( 'openOnInit' );
+        }
 	},
 	
 	reinit: function() {
@@ -162,6 +168,9 @@ $.extend(InlineEditor.prototype, {
 	},
 	
 	shouldOpenEditor: function(anEvent) {
+        if( anEvent == 'openOnInit' ){
+            return true;
+        }
 		if (this.isClickedObjectCancelled(anEvent.target))
 			return false;
 		
